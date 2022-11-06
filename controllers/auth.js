@@ -31,8 +31,6 @@ const login = async (req, res = response) => {
     res.json({
       token,
     });
-
-
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -41,6 +39,16 @@ const login = async (req, res = response) => {
   }
 };
 
+const renewToken = async (req, res) => {
+  const id = req.uid;
+
+  //Generar el token - JWT
+  const token = await generateJWT(id);
+  res.json({
+    token
+  });
+};
 module.exports = {
   login,
+  renewToken,
 };

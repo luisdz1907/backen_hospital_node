@@ -4,15 +4,13 @@ const { response } = require("express");
 const Hospital = require("../models/hospital");
 
 const getHospitalesController = async (req, res = response) => {
-
-  const hosìtales =  await Hospital.find().populate('usuario','nombre');
+  const hosìtales = await Hospital.find().populate("usuario", "nombre");
 
   res.json({
     msg: "getHospitales",
-    hosìtales
+    hosìtales,
   });
 };
-
 
 const postHospitalesController = async (req, res = response) => {
   //Obtenemos los datos del hospital
@@ -36,16 +34,60 @@ const postHospitalesController = async (req, res = response) => {
   }
 };
 
-const updateHospitalesController = (req, res = response) => {
-  res.json({
-    msg: "updateHospitales",
-  });
+const updateHospitalesController = async (req, res = response) => {
+  const id = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const hospital = await Hospital.findById(id);
+
+    if (!hospital) {
+      return res.status(404).json({
+        msg: "Hospital no encontrado por ID.",
+      });
+    }
+
+    const newHospital = {
+      ...req.body,
+      usuario: uid,
+    };
+
+    const updateHospital  = await Hospital.findByIdAndUpdate(id, newHospital, { new: true })
+
+    res.json({
+      msg: "Hospital actualizado.",
+      updateHospital
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Hable con el administrador",
+    });
+  }
 };
 
-const deleteHospitalesController = (req, res = response) => {
-  res.json({
-    msg: "deleteHospitales",
-  });
+const deleteHospitalesController = async (req, res = response) => {
+  const id = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const hospital = await Hospital.findById(id);
+
+    if (!hospital) {
+      return res.status(400).json({
+        msg: "Hospital no encontrado por ID.",
+      });
+    }
+ 
+    await Hospital.findByIdAndDelete( id )
+
+    res.json({
+      msg: "Hospital eliminado."
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Hable con el administrador",
+    });
+  }
 };
 
 module.exports = {
