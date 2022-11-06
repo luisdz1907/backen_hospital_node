@@ -16,10 +16,9 @@ const hospitalSchema = Schema({
 },{ collection: 'hospitales' });
 
 //El parametro del id
-hospitalSchema.method("toJSON", function () {
-  const { _v, _id, password, ...object } = this.toObject();
-  object.id = _id;
+hospitalSchema.method('toJSON', function() {
+  const { __v, ...object } = this.toObject();
   return object;
-});
+})
 
 module.exports = model("Hospital", hospitalSchema);

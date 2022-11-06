@@ -16,7 +16,7 @@ const medicoSchema = Schema(
     },
     hospital: {
       type: Schema.Types.ObjectId,
-      ref: "Usuario",
+      ref: "Hospital",
       required:true
     },
   },
@@ -24,10 +24,10 @@ const medicoSchema = Schema(
 );
 
 //El parametro del id
-medicoSchema.method("toJSON", function () {
-  const { _v, _id, password, ...object } = this.toObject();
-  object.id = _id;
+
+medicoSchema.method('toJSON', function() {
+  const { __v, ...object } = this.toObject();
   return object;
-});
+})
 
 module.exports = model("Medico", medicoSchema);

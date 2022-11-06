@@ -5,10 +5,24 @@ const { generateJWT } = require("../helpers/jwt");
 
 // GET ALL USUARIOS
 const getUsuariosController = async (req, res) => {
-  const usuarios = await Usuario.find();
+
+  //Obtenemos el numero de la pagina en la URL
+  const desde = Number(req.query.desde) || 0;
+
+  const [usuarios, total] = await Promise.all([
+   //Consulta de usuarios con paginacion
+    Usuario.find({},'nombre email role google img')
+    .skip(desde)
+    .limit(5),
+
+    //Obtener total de registros
+    Usuario.count()
+  ])
+
   res.json({
     usuarios,
-    uid: req.uid
+    uid: req.uid,
+    total
   });
 };
 

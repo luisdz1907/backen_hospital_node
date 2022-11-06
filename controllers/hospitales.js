@@ -3,16 +3,17 @@ const { response } = require("express");
 //Model
 const Hospital = require("../models/hospital");
 
-const getHospitalesController = (req, res = response) => {
+const getHospitalesController = async (req, res = response) => {
+
+  const hosìtales =  await Hospital.find().populate('usuario','nombre');
+
   res.json({
     msg: "getHospitales",
+    hosìtales
   });
 };
-const getHospitalController = (req, res = response) => {
-  res.json({
-    msg: "getHospital",
-  });
-};
+
+
 const postHospitalesController = async (req, res = response) => {
   //Obtenemos los datos del hospital
   const uid = req.uid;
@@ -25,7 +26,7 @@ const postHospitalesController = async (req, res = response) => {
     const hospitalDB = await hospital.save();
 
     res.json({
-      msg: "getpostHospital",
+      msg: "postHospital",
       hospitalDB,
     });
   } catch (error) {
@@ -34,11 +35,13 @@ const postHospitalesController = async (req, res = response) => {
     });
   }
 };
+
 const updateHospitalesController = (req, res = response) => {
   res.json({
     msg: "updateHospitales",
   });
 };
+
 const deleteHospitalesController = (req, res = response) => {
   res.json({
     msg: "deleteHospitales",
@@ -47,7 +50,6 @@ const deleteHospitalesController = (req, res = response) => {
 
 module.exports = {
   getHospitalesController,
-  getHospitalController,
   postHospitalesController,
   updateHospitalesController,
   deleteHospitalesController,
